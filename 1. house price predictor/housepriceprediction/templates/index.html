@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>House price prediction</title>
+</head>
+<body>
+    <h1>Welcome to Banglore House Price Predictor</h1>
+    <h2>want to predict the price of a new house in banglore?  try filling the details below:</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label>select the location: </label>
+        <select id="location" name="location">
+            <option> </option>
+            {% for i in location %}
+            <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </select><br>
+    
+        <label>Enter BHK:</label>
+        <input type="text" id="bhk" name="bhk"><br>
+    
+        <label>Enter no.of bathrooms:</label>
+        <input type="text" id="bath" name="bath"><br>
+            
+        <label>Enter square feet:</label>
+        <input type="text" id="total_sqft" name="total_sqft"><br>
+    
+        <button type="submit">Predict</button>
+    
+        <div><h3><span id="prediction"></span></h3></div>
+    </form>
+    
+    </form>
+    <script>
+        function form_handler(event){
+            event.preventDefault();
+        }
+        
+        function send_data(){
+            var form = document.querySelector('form');
+            form.addEventListener('submit', form_handler);
+        
+            var fd = new FormData(form);
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/predict', true);
+            document.getElementById('prediction').innerHTML = "Wait, predicting price....";
+        
+            xhr.onreadystatechange = function(){
+                if (xhr.readyState == XMLHttpRequest.DONE) {
+                    document.getElementById('prediction').innerHTML = "Prediction: " + xhr.responseText;
+                }
+            };
+        
+            xhr.send(fd);
+        }
+        
+
+
+    </script>
+</body>
+</html>
